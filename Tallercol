@@ -1,0 +1,123 @@
+/*Programa de inventarios*/
+//llamar a la funcion que necesitamos
+#include <stdio.h>
+#include <string.h>
+#include "inter.h"
+//definimos la longitud maxima del nombre del producto
+#define lonmax 50
+
+int main(){
+    //Se inicializan las variables.
+    int num = 0;
+    printf("Cuantos productos decea agregar?\n"); scanf("%d" , &num);
+    char nombr[num][lonmax];
+    
+    int cantproduct[num];
+    float precio[num];
+    int elec;
+    getchar();
+    //Aqui doy valores a las variables (Nombre, cantidad, precio. todo se acumulan en los vectores para usar una sola variable)
+    for(int i = 0 ; i < num ; i++){
+        printf("Cual va a ser el nombre del producto?\n");
+        fgets(nombr[i], lonmax , stdin);
+        nombr[i][strcspn(nombr[i], "\n")] = '\0';
+        printf("Caul es la cantidad del producto que hay?\n");
+        scanf("%d" , &cantproduct[i]);
+        getchar();
+        printf("Cual es el precio del producto?\n");
+        scanf("%f" , &precio[i]);
+    }
+    //Aqui agrego los valores en una lista
+    for(int i = 0 ; i < num ; i++){
+        printf("Este es la lista de los pruductos\n");
+        printf("%d. %s,Precio %.2f = %d\n" , i + 1 , nombr[i] , precio[i] ,cantproduct[i]);
+    }
+    ingresar:
+    //aqui llamo a la funcion para añadir o quitar productos
+    aumoquit(cantproduct);
+    //Aqui verificamos y vemos si hay o no hay productos e imprimimos los productos editados
+    for(int i = 0 ; i < num ; i++){
+        if(cantproduct[i] <= 0){
+            strcpy(nombr[i], "No hay mas producto");
+            cantproduct[i] = 0;
+        }
+        printf("Este es la lista de los pruductos despues de la edicion\n");
+        printf("%d. %s,Precio %.2f = %d\n" , i + 1 , nombr[i] ,  precio[i] , cantproduct[i]);
+    }
+    repet:
+    //Aqui preguntamos si quiere editar otra vez
+    printf("Quiere continuar?\nsi = 1\nno=2");
+    scanf("%d" , &elec);
+    switch(elec){
+        case 1:
+        //Aqui regresamos en el caso de que si quiera editar
+            goto ingresar;
+        case 2:
+        //Aquie finalizamos el programa
+            return 0;
+        default:
+            printf("No esta entre las opciones\n");
+            //aqui regresamos si escogio una opcion que no era
+            goto repet;
+    }
+    return 0;
+}
+
+int aumoquit(int cantproduct[]){
+    //Aqui iniciamos las variables que vamos a usar
+    char sino;
+    int elec;
+    int cant;
+    int num;
+    ingresar:
+    // Preguntamos si quiere iniciar la edicion.
+    printf("Decea editar la lista?\nS = si\n N = no");
+    getchar();
+    scanf("%s" , &sino);
+    //Vemos los casos dpendiendo de lo que eliga el usuario
+    switch(sino){
+        case 'S':
+        //Aqui vemos que producto quiere editar de la lista
+            printf("Que producto quiere editar de la lista?\n");
+            scanf("%d" , &num);
+            //Aqui preguntamos si quiere quitar o agregar productos
+            printf("Quitar o agregar producto? \n1 = quitar \n2 = agregar\n");
+            scanf("%d" , &elec);
+            if(elec == 1){
+                //Condicional para quitar
+                printf("Cuanto quiere quitar?\n");
+                scanf("%d" , &cant);
+                cantproduct[num - 1] -= cant;
+            }else if(elec == 2){
+                //Condicional para agregar
+                printf("Cuanto quiere aumentar?\n");\
+                scanf("%d" , &cant);
+                cantproduct[num - 1] += cant;
+            }
+        
+        case 's':
+        //lo mismo que en la condicion de arriva
+            printf("Que producto quiere editar de la lista?\n");
+            scanf("%d" , &num);
+            printf("Quitar o agregar producto? \n1 = quitar \n2 = agregar\n");
+            scanf("%d" , &elec);
+            if(elec == 1){
+                printf("Cuanto quiere quitar?\n");
+                scanf("%d" , &cant);
+                cantproduct[num - 1] -= cant;
+            }else if(elec == 2){
+                printf("Cuanto quiere aumentar?\n");\
+                scanf("%d" , &cant);
+                cantproduct[num - 1] += cant;
+            }
+            //si eligue no termina el trabajo de la funcion
+        case 'N':
+            return 0;
+        case 'n':
+            return 0;
+        default:
+        //si escogio mal regresa al la pregunta inicial
+            printf("Opción no válida\n");
+            goto ingresar;
+        }
+    }
